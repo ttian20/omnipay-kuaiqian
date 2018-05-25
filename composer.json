@@ -1,0 +1,23 @@
+{
+    "name": "ttian20/omnipay-kuaiqian",
+    "description": "快钱支付SDK",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "ttian20",
+            "email": "ttian20@gmail.com"
+        }
+    ],
+    "require": {
+        "omnipay/common": "~2.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Omnipay\\Bill99\\": "src/"
+        }
+    },
+    "require-dev": {
+        "omnipay/tests": "~2.0"
+    }
+}
