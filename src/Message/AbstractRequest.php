@@ -93,7 +93,15 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
     {
         $signer = new Signer($params);
         $signer->setIgnores(['signMsg']);
-        $sign = $signer->signWithRSA($this->getPrivateKey());
+        switch ($this->getSignType()) {
+            case '1':
+                //已废弃,不推荐
+                $sign = $signer->signWithMD5($this->getPrivateKey());
+                break;
+            case '4':
+                $sign = $signer->signWithRSA($this->getPrivateKey());
+                break;
+        }
         return $sign;
     }
 

@@ -212,7 +212,6 @@ class Signer
         return $sign;
     }
 
-
     public function signContentWithRSA($content, $privateKey, $alg = OPENSSL_ALGO_SHA1)
     {
         $privateKey = $this->prefix($privateKey);
@@ -235,6 +234,16 @@ class Signer
         $sign = base64_encode($sign);
 
         return $sign;
+    }
+
+    public function signWithMD5($privateKey)
+    {
+        $content = $this->getContentToSign();
+        $content .= '&key=' . $privateKey;
+
+        $sign = md5($content);
+
+        return strtoupper($sign);
     }
 
 
