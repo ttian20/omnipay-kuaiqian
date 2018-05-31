@@ -216,21 +216,21 @@ class Signer
     {
         $privateKey = $this->prefix($privateKey);
         $privateKey = $this->format($privateKey, self::KEY_TYPE_PRIVATE);
-        $res = openssl_pkey_get_private($privateKey);
+        $privKeyId = openssl_pkey_get_private($privateKey);
 
         $sign = null;
 
         try {
-            openssl_sign($content, $sign, $res, $alg);
+            openssl_sign($content, $sign, $privKeyId, $alg);
         } catch (Exception $e) {
             if ($e->getCode() == 2) {
                 $message = $e->getMessage();
-                $message .= "\n应用私钥格式有误，见 https://github.com/lokielse/omnipay-alipay/wiki/FAQs";
+                $message .= "\n应用私钥格式有误";
                 throw new Exception($message, $e->getCode(), $e);
             }
         }
 
-        openssl_free_key($res);
+        openssl_free_key($privKeyId);
         $sign = base64_encode($sign);
 
         return $sign;
@@ -323,7 +323,6 @@ class Signer
         return md5($content . $key) == $sign;
     }
 
-
     public function verifyWithRSA($content, $sign, $publicKey, $alg = OPENSSL_ALGO_SHA1)
     {
         $publicKey = $this->prefix($publicKey);
@@ -331,7 +330,7 @@ class Signer
         $res = openssl_pkey_get_public($publicKey);
         if (!$res) {
             $message = "The public key is invalid";
-            $message .= "\n公钥格式有误，见 https://github.com/lokielse/omnipay-alipay/wiki/FAQs";
+            $message .= "\n公钥格式有误";
             throw new Exception($message);
         }
         $result = (bool)openssl_verify($content, base64_decode($sign), $res, $alg);
